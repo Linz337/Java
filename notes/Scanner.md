@@ -8,7 +8,7 @@ double:double c=in.nextDouble();
 !!!char:char d=in.next(),charAt(0);!!!
 String str=in.nextLine();
 
-[]:int e[]=new int[6];
+***     []:int e[]=new int[6];     ***
 for(int i=0;i<6;++i)
 {
   a[i]=in.nextInt();
