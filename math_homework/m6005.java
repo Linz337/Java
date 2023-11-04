@@ -1,4 +1,4 @@
-package homework;
+package math_homework;
 
 public class m6005 {
     public static void main(String[] args) {

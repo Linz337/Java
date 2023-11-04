@@ -1,6 +1,7 @@
 package daily_practice.Animal;
 
 public abstract class Animal {
+    // extends & generics
     private String name;
     private int age;
     public Animal(){
