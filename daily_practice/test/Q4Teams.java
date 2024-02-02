@@ -145,10 +145,11 @@ public class Q4Teams {
     public int addPerson(int skillLevel) {
         int team = 0;
         boolean allocated=false;
-        int person_id=PersonID++;
-        Person person=new Person(person_id,team,skillLevel,allocated);
-        // FIXME: Implement this method
-        return person_id;
+//        int person_id=PersonID++;
+//        Person person=new Person(person_id,team,skillLevel,allocated);
+//        // FIXME: Implement this method
+//        return person_id;
+        return 0;
     }
 
     /**
