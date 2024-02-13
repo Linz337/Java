@@ -1,6 +1,11 @@
 package daily_practice.test;
 
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * This class tracks the allocation of persons to teams.
  * Each person is assigned an integer id. These are consecutive (i.e.,
@@ -50,89 +55,37 @@ package daily_practice.test;
  * (provided in the test class, Q4TeamsTest).
  */
 public class Q4Teams {
-    int TeamID;
-    int TeamSize;
-    int TeamSkill;
-    int TalentReserve;
+    int perID=0;
+    int TeamID=0;
 
-    public Q4Teams(int TeamID,int teamSize, int teamSkill, int talentReserve) {
-        this.TeamID=TeamID;
-        this.TeamSize = teamSize;
-        this.TeamSkill = teamSkill;
-        this.TalentReserve = talentReserve;
-    }
-
-    public Q4Teams() {}
-
-    public int getTeamSize() {
-        return TeamSize;
-    }
-
-    public void setTeamSize(int teamSize) {
-        TeamSize = teamSize;
-    }
-
-    public int getTeamSkill() {
-        return TeamSkill;
-    }
-
-    public void setTeamSkill(int teamSkill) {
-        TeamSkill = teamSkill;
-    }
-
-    public void setTalentReserve(int talentReserve) {
-        TalentReserve = talentReserve;
+    public Q4Teams(){}
+    public class Teams{
+        public int TeamID;
+        public int skill;
+        public int size;
+        Set<Person> people=new HashSet<>();
+        public Teams(int TeamID) {
+            this.TeamID = TeamID;
+            this.skill = 0;
+            this.size=0;
+        }
     }
 
 
+    public class Person{
+        public int personID;
+        public int Team;
+        public int skillLevel;
+        boolean allocated;
 
-
-    public static class Person{
-        public static int PersonID;
-        public static int Team;
-        public int Skill;
-        boolean allocated=false;
-
-        public Person(int personID, int team, int skill, boolean allocated) {
-            this.PersonID = personID;
-            this.Team = team;
-            this.Skill = skill;
-            this.allocated = allocated;
+        public Person(int personID,int skillLevel) {
+            this.personID = personID;
+            this.skillLevel=skillLevel;
+            this.allocated = false;
         }
-        public int getPersonID() {
-            return PersonID;
-        }
-
-        public void setPersonID(int personID) {
-            PersonID = personID;
-        }
-
-        public int getTeam() {
-            return Team;
-        }
-
-        public void setTeam(int team) {
-            Team = team;
-        }
-
-        public int getSkill() {
-            return Skill;
-        }
-
-        public void setSkill(int skill) {
-            Skill = skill;
-        }
-
-        public boolean isAllocated() {
-            return allocated;
-        }
-
-        public void setAllocated(boolean allocated) {
-            this.allocated = allocated;
-        }
-
-
     }
+    Map<Integer,Person> personmap=new HashMap<>();
+    Map<Integer,Teams> teamsMap=new HashMap<>();
 
     /**
      * Add a new person, with a given skill level.
@@ -143,13 +96,11 @@ public class Q4Teams {
      * @return The id of the newly added person.
      */
     public int addPerson(int skillLevel) {
-        int team = 0;
-        boolean allocated=false;
-//        int person_id=PersonID++;
-//        Person person=new Person(person_id,team,skillLevel,allocated);
-//        // FIXME: Implement this method
-//        return person_id;
-        return 0;
+        int personID=perID;
+        perID++;
+        Person person1=new Person(personID,skillLevel);
+        personmap.put(personID,person1);
+        return personID;
     }
 
     /**
@@ -161,9 +112,12 @@ public class Q4Teams {
      * @return The id of the newly created team.
      */
     public int createTeam() {
-
+        int teamid=TeamID;
+        TeamID++;
+        Teams team=new Teams(teamid);
+        teamsMap.put(teamid,team);
         // FIXME: Implement this method
-        return 0;
+        return teamid;
     }
 
     /**
@@ -176,6 +130,28 @@ public class Q4Teams {
      */
     public void addToTeam(int personId, int teamId) {
         // FIXME: Implement this method
+        if (personmap.containsKey(personId)==false||teamsMap.containsKey(teamId)==false){
+            return;
+        }
+        Person person2=personmap.get(personId);
+        if (person2.allocated==false){
+            person2.allocated=true;
+        }
+        else {
+            int oriteam=person2.Team;
+            Teams team=teamsMap.get(oriteam);
+            team.people.remove(person2);
+            team.size--;
+            team.skill-=person2.skillLevel;
+            teamsMap.put(oriteam,team);
+        }
+        person2.Team=teamId;
+        personmap.put(personId,person2);
+        Teams team2=teamsMap.get(teamId);
+        team2.people.add(person2);
+        team2.skill+=person2.skillLevel;
+        team2.size++;
+        teamsMap.put(teamId,team2);
     }
 
     /**
@@ -187,6 +163,22 @@ public class Q4Teams {
      */
     public void removeFromTeam(int personId, int teamId) {
         // FIXME: Implement this method
+        if (personmap.containsKey(personId)==false||teamsMap.containsKey(teamId)==false){
+            return;
+        }
+        Person person3=personmap.get(personId);
+        if (person3.allocated==false){return;}
+        if (person3.Team!=teamId){
+            return;
+        }
+        person3.allocated=false;
+        person3.Team=-1;
+        personmap.put(personId,person3);
+        Teams team=teamsMap.get(teamId);
+        team.people.remove(person3);
+        team.skill-=person3.skillLevel;
+        team.size--;
+        teamsMap.put(teamId,team);
     }
 
     /**
@@ -195,7 +187,16 @@ public class Q4Teams {
      * nothing.
      */
     public void setSkill(int personId, int newSkillLevel) {
-        // FIXME: Implement this method
+//         FIXME: Implement this method
+        if (personmap.containsKey(personId)==false){
+            return;
+        }
+        Person person=personmap.get(personId);
+        Teams team=teamsMap.get(person.Team);
+        team.skill-=person.skillLevel;
+        person.skillLevel=newSkillLevel;
+        team.skill+=person.skillLevel;
+        personmap.put(personId,person);
     }
 
     /**
@@ -208,7 +209,10 @@ public class Q4Teams {
      */
     public int getTeam(int personId) {
         // FIXME: Implement this method
-        return -1;
+        if (personmap.containsKey(personId)==false||personmap.get(personId).allocated==false){
+            return -1;
+        }
+        return personmap.get(personId).Team;
     }
 
     /**
@@ -218,7 +222,12 @@ public class Q4Teams {
      */
     public int getTeamSize(int teamId) {
         // FIXME: Implement this method
-        return TeamSize;
+        if (teamsMap.containsKey(teamId)==false){
+            return -1;
+        }
+        Teams team=teamsMap.get(teamId);
+        return team.people.size();
+//        return teamsMap.get(teamId).people.size();
     }
 
     /**
@@ -228,7 +237,15 @@ public class Q4Teams {
      */
     public int getTeamSkill(int teamId) {
         // FIXME: Implement this method
-        return TeamSkill;
+        if (teamsMap.containsKey(teamId)==false){
+            return -1;
+        }
+        Teams team=teamsMap.get(teamId);
+//        int totallevel=0;
+//        for (Person person : team.people) {
+//            totallevel+=person.skillLevel;
+//        }
+        return team.skill;
     }
 
     /**
@@ -236,12 +253,14 @@ public class Q4Teams {
      * not in any team).
      */
     public int getUnallocated() {
-        int un_num=0;
-        //        if (Person.isAllocated==false){
-        //            un_num++;
-        //        }
+        int unnum=0;
+        for (Person value : personmap.values()) {
+            if (value.allocated==false){
+                unnum++;
+            }
+        }
         // FIXME: Implement this method
-        return un_num;
+        return unnum;
     }
 
     /**
@@ -249,7 +268,13 @@ public class Q4Teams {
      */
     public int getTalentReserve() {
         // FIXME: Implement this method
-        return -1;
+        int unlevels=0;
+        for (Person value : personmap.values()) {
+            if (value.allocated==false){
+                unlevels+=value.skillLevel;
+            }
+        }
+        return unlevels;
     }
 
     /**

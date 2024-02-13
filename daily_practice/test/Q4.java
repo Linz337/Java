@@ -50,10 +50,6 @@ package daily_practice.test;
  * (provided in the test class, Q4TeamsTest).
  */
 public class Q4 {
-    int TeamID;
-    int TeamSize;
-    int TeamSkill;
-    int TalentReserve;
 
     public Q4() {}
 
@@ -137,7 +133,7 @@ public class Q4 {
      */
     public int getTeamSize(int teamId) {
         // FIXME: Implement this method
-        return TeamSize;
+        return 0;
     }
 
     /**
@@ -147,7 +143,7 @@ public class Q4 {
      */
     public int getTeamSkill(int teamId) {
         // FIXME: Implement this method
-        return TeamSkill;
+        return 0;
     }
 
     /**

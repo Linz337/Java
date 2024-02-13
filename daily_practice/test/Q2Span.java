@@ -64,24 +64,32 @@ public class Q2Span {
         if (contained==null||contained.size()==0){
             return true;
         }
+        for (Q2Span span : contained) {
+            if (span.isValid()==true){
+                continue;
+            }
+            else{
+                return false;
+            }
+        }
         //        List<Q2Span> sub = new ArrayList<>();
         //        sub=contained.subList(1,contained.size()-1);
 
-        contained.remove(contained.size()-1);
-        contained.remove(0);
+//        contained.remove(contained.size()-1);
+//        contained.remove(0);
 
 
-        if (contained.contains('[')){
-            for (int i=contained.get('[').start;i<contained.size();i++) {
-                Q2Span sub = null;
-                sub.contained.add(contained.get(i));
-                if (contained.get(i).equals(']')) {
-                    sub.start=contained.get('[').start+1;
-                    sub.end=contained.get(']').end+1;
-                    sub.isValid();
-                }
-            }
-        }
+//        if (contained.contains('[')){
+//            for (int i=contained.get('[').start;i<contained.size();i++) {
+//                Q2Span sub = null;
+//                sub.contained.add(contained.get(i));
+//                if (contained.get(i).equals(']')) {
+//                    sub.start=contained.get('[').start+1;
+//                    sub.end=contained.get(']').end+1;
+//                    sub.isValid();
+//                }
+//            }
+//        }
 
         // FIXME: implement this method
         return true;
